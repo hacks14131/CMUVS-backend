@@ -8,8 +8,14 @@ const candidatePictureSchema = new mongoose.Schema({
     required: true,
   },
   profilePicture: {
-    contentType: String,
-    data: Buffer,
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
 });
 

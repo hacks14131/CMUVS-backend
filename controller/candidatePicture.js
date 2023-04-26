@@ -1,50 +1,64 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
+const cloudinary = require('../utils/cloudinary');
 const CandidatePicture = require('../models/candidatePicture');
 
-const postCandidatePicture = (req, res) => {
-  // console.log('controller: ', req.file);
-  const candidatePicture = new CandidatePicture({
-    _id: mongoose.Types.ObjectId(),
-    userID: req.body.userID,
-    profilePicture: {
-      data: fs.readFileSync(`./backend/image/${req.file.filename}`),
-      contentType: 'image/png',
-    },
-  });
-  candidatePicture
-    .save()
-    .then((docs) => {
+const postCandidatePicture = async (req, res) => {
+  try {
+    const { userID, profilePicture } = req.body;
+    const result = await cloudinary.uploader.upload(profilePicture, {
+      folder: 'profilePictures',
+      width: 300,
+      height: 300,
+      crop: 'scale',
+    });
+
+    const candidatePicture = await new CandidatePicture({
+      _id: mongoose.Types.ObjectId(),
+      userID,
+      profilePicture: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
+    });
+    candidatePicture.save().then((docs) => {
       res.status(201).json({
-        _id: docs._id,
-        candidateID: docs.candidateID,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        'Error Details': {
-          message: error.message,
-          error: error,
-        },
+        success: true,
+        docs,
       });
     });
-  // res.status(200).json({ status: 'good' });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      'Error Details': {
+        message: error.message,
+        error: error,
+      },
+    });
+  }
 };
 
 const updateCandidateProfilePicture = async (req, res, next) => {
   try {
-    console.log('entered here in update profile controller');
-    console.log(req.file);
+    const { profilePicture } = req.body;
     const userID = req.params.userID;
     const query = { userID: userID };
+    const options = { new: true };
+
+    const result = await cloudinary.uploader.upload(profilePicture, {
+      folder: 'profilePictures',
+      width: 300,
+      height: 300,
+      crop: 'scale',
+    });
+
     const Update = {
       profilePicture: {
-        data: fs.readFileSync(`./backend/image/${req.file.filename}`),
-        contentType: 'image/png',
+        public_id: result.public_id,
+        url: result.secure_url,
       },
     };
-    const options = { new: true };
-    console.log(req.params);
+
     await CandidatePicture.findOneAndUpdate(query, Update, options).then(
       (profile) => {
         res.status(200).json(profile);

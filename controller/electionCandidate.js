@@ -64,9 +64,7 @@ const getElectionCandidate = (req, res) => {
       const today = new Date();
       let status = false;
       let item = {};
-      console.log(
-        `Today: ${today.getTime()}, Closing Date: ${docs[0].electionID.electionClosingDate.getTime()}`
-      );
+
       for (let i = 0; i < docs.length; i++) {
         if (
           today.getTime() < docs[i].electionID.electionClosingDate.getTime()
