@@ -32,6 +32,8 @@ const postCandidatePicture = (req, res, next) => {
 
 const updateCandidateProfilePicture = async (req, res, next) => {
   try {
+    console.log('entered here in update profile controller');
+    console.log(req.file);
     const userID = req.params.userID;
     const query = { userID: userID };
     const Update = {
