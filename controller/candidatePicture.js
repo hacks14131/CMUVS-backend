@@ -3,6 +3,7 @@ const fs = require('fs');
 const CandidatePicture = require('../models/candidatePicture');
 
 const postCandidatePicture = (req, res, next) => {
+  console.log('controller: ', req.file);
   const candidatePicture = new CandidatePicture({
     _id: mongoose.Types.ObjectId(),
     userID: req.body.userID,

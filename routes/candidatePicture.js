@@ -7,7 +7,7 @@ const fileStorageEngine = multer.diskStorage({
     cb(null, './backend/image/');
   },
   filename: (req, file, cb) => {
-    console.log(file);
+    console.log('middleware ', file);
     cb(null, Date.now() + '-' + file.originalname);
   },
 });
