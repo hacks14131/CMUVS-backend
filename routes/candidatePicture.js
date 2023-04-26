@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { verifyAccessToken } = require('../utils/generateToken');
 
 const fileStorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, './backend/image/');
   },
   filename: (req, file, cb) => {
-    console.log(file);
     cb(null, Date.now() + '-' + file.originalname);
   },
 });
