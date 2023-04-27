@@ -41,6 +41,7 @@ connectDB();
 app.use(
   express.urlencoded({
     extended: false,
+    limit: 10000,
   })
 );
 app.use(express.json());

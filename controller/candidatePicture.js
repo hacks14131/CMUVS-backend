@@ -9,7 +9,6 @@ const postCandidatePicture = async (req, res) => {
     const result = await cloudinary.uploader.upload(profilePicture, {
       folder: 'profilePictures',
       width: 300,
-      height: 300,
       crop: 'scale',
     });
 
@@ -38,28 +37,26 @@ const postCandidatePicture = async (req, res) => {
   }
 };
 
-const updateCandidateProfilePicture = async (req, res, next) => {
+const updateCandidateProfilePicture = async (req, res) => {
   try {
-    const { profilePicture } = req.body;
-    const userID = req.params.userID;
-    const query = { userID: userID };
+    const { profilePicture, userID } = req.body;
+    const query = { userID };
     const options = { new: true };
 
     const result = await cloudinary.uploader.upload(profilePicture, {
       folder: 'profilePictures',
       width: 300,
-      height: 300,
       crop: 'scale',
     });
 
-    const Update = {
+    const update = {
       profilePicture: {
         public_id: result.public_id,
         url: result.secure_url,
       },
     };
 
-    await CandidatePicture.findOneAndUpdate(query, Update, options).then(
+    await CandidatePicture.findOneAndUpdate(query, update, options).then(
       (profile) => {
         res.status(200).json(profile);
       }

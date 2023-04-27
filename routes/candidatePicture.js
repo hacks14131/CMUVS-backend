@@ -33,7 +33,7 @@ const {
 } = require('../controller/candidatePicture');
 
 router.post('/', postCandidatePicture);
-router.patch('/:userID', updateCandidateProfilePicture);
+router.patch('/update-candidate-profile', updateCandidateProfilePicture);
 router.get('/:userID', getCandidatePictureByUserID);
 
 module.exports = router;
