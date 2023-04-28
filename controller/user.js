@@ -170,7 +170,6 @@ const authUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({
       username,
     });
-
     const passwordMatch = await user.matchPassword(accountPassword);
     if (user !== null && passwordMatch) {
       res.status(200).json({
@@ -192,6 +191,24 @@ const authUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid username or password');
   }
 });
+
+const oldPasswordAuth = async (req, res) => {
+  try {
+    const { studentID, accountPassword, newPassword } = req.body;
+    const user = await User.findOne({ studentID });
+    const passwordMatch = await user.matchPassword(accountPassword);
+    if (user !== null && passwordMatch) {
+      user.accountPassword = newPassword;
+      user.save().then((docs) => {
+        res.status(200).json(docs);
+      });
+    } else {
+      res.status(304).json({ message: 'update failed' });
+    }
+  } catch (error) {
+    res.status(304).json({ message: error });
+  }
+};
 
 const signUpValidator = async (req, res) => {
   try {
@@ -363,4 +380,5 @@ module.exports = {
   authenticateUser,
   getTotalExpectedVoterNumber,
   deactivateStudentAccountStatus,
+  oldPasswordAuth,
 };

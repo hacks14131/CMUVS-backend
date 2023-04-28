@@ -9,9 +9,11 @@ const {
   signUpValidator,
   updateUserInfo,
   deactivateStudentAccountStatus,
+  oldPasswordAuth,
 } = require('../controller/user');
 
 router.post('/', registerUser);
+router.post('/reset-password', oldPasswordAuth);
 router.patch('/update-user-information/:userID', updateUserInfo);
 router.patch('/deactivate-students/status', deactivateStudentAccountStatus);
 router.get('/checkUser/:firstname/:familyname', checkUser);
