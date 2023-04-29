@@ -277,6 +277,7 @@ const validateUser = async (req, res) => {
       _id: _id,
       studentID: studentID,
       registrationNumber: registrationNumber,
+      studentStatus: 'active',
     };
     User.findOne(query).then((docs) => {
       if (docs) {
