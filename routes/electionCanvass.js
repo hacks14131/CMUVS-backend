@@ -7,9 +7,11 @@ const {
   findElectionCanvassById,
   updateCanvassStatusByID,
   getCanvassedElections,
+  getAllElectionCanvass,
 } = require('../controller/electionCanvass');
 
 router.post('/', createElectionCanvass);
+router.get('/', getAllElectionCanvass);
 router.get('/:id', findElectionCanvassById);
 router.get(
   '/get-canvassed-elections/:college/:department',

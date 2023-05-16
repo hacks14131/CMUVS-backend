@@ -9,9 +9,11 @@ const {
   updateCanvassingOfficerTaskStatus,
   getCanvasserOfficerFullName,
   getCanvasserOfficer,
+  getAllCanvassingOfficer,
 } = require('../controller/canvassingOfficer');
 
 router.post('/', createCanvassingOfficer);
+router.get('/', getAllCanvassingOfficer);
 router.get('/:id', findCanvassingOfficerById);
 router.get('/canvass-list/:id', findCanvassingOfficerTask);
 router.get('/info/:id/:canvassID', getCanvasserOfficerFullName);

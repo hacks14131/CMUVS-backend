@@ -117,10 +117,26 @@ const updateCanvassStatusByID = (req, res) => {
   }
 };
 
+const getAllElectionCanvass = (req, res) => {
+  try {
+    ElectionCanvass.find({})
+      .populate(
+        'electionID',
+        'electionName electionLevel schoolYear electionOpeningDate electionClosingDate'
+      )
+      .then((docs) => {
+        res.status(200).json(docs);
+      });
+  } catch (error) {
+    res.status(404).json(error);
+  }
+};
+
 module.exports = {
   createElectionCanvass,
   findElectionCanvass,
   findElectionCanvassById,
   updateCanvassStatusByID,
   getCanvassedElections,
+  getAllElectionCanvass,
 };

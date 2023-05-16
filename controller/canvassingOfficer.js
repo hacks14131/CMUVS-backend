@@ -141,6 +141,19 @@ const getCanvasserOfficer = (req, res) => {
   }
 };
 
+const getAllCanvassingOfficer = (req, res) => {
+  try {
+    CanvassingOfficer.find({})
+      .populate('userID', 'firstName familyName')
+      .populate('electionCanvassID', 'electionID')
+      .then((docs) => {
+        res.status(200).json(docs);
+      });
+  } catch (error) {
+    res.status(404).json(error);
+  }
+};
+
 module.exports = {
   createCanvassingOfficer,
   findCanvassingOfficerTask,
@@ -150,4 +163,5 @@ module.exports = {
   updateCanvassingOfficerTaskStatus,
   getCanvasserOfficerFullName,
   getCanvasserOfficer,
+  getAllCanvassingOfficer,
 };
