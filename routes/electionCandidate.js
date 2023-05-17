@@ -18,9 +18,11 @@ const {
   getElectionCandidate,
   deleteElectionCandidate,
   getElectionCandidateByELection,
+  getAllCandidate,
 } = require('../controller/electionCandidate');
 
 router.post('/', createElectionCandidate);
+router.get('/', getAllCandidate);
 router.get('/:userID', getElectionCandidate);
 router.get('/candidate/:electionID', getElectionCandidateByELection);
 router.delete('/:id', deleteElectionCandidate);

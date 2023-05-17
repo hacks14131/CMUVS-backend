@@ -61,4 +61,40 @@ const getMottoByCandidateID = async (req, res) => {
     });
 };
 
-module.exports = { createMotto, getMottoByCandidateID, updateMotto };
+const adminUpdateMotto = async (req, res) => {
+  try {
+    const { electionCandidateID, motto } = req.body;
+    const checkMotto = await Motto.findOne({ electionCandidateID });
+    if (checkMotto) {
+      // update motto
+      const query = { electionCandidateID };
+      const options = { new: true };
+      const update = { motto };
+      await Motto.findOneAndUpdate(query, update, options).then(() => {
+        console.log('motto updated');
+        res.status(202).json({ message: 'successful update' });
+      });
+    } else {
+      // create motto
+      const newMotto = new Motto({
+        _id: mongoose.Types.ObjectId(),
+        electionCandidateID: electionCandidateID,
+        motto,
+      });
+
+      newMotto.save().then(() => {
+        console.log('motto posted');
+        res.status(201).json({ message: 'successful post' });
+      });
+    }
+  } catch (error) {
+    res.status(404).json(errpr);
+  }
+};
+
+module.exports = {
+  createMotto,
+  getMottoByCandidateID,
+  updateMotto,
+  adminUpdateMotto,
+};

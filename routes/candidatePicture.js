@@ -30,9 +30,11 @@ const {
   postCandidatePicture,
   getCandidatePictureByUserID,
   updateCandidateProfilePicture,
+  adminUpdateProfilePicture,
 } = require('../controller/candidatePicture');
 
 router.post('/', postCandidatePicture);
+router.post('/admin-candidate-profile-update', adminUpdateProfilePicture);
 router.patch('/update-candidate-profile', updateCandidateProfilePicture);
 router.get('/:userID', getCandidatePictureByUserID);
 

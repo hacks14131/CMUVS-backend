@@ -205,6 +205,16 @@ const extendElection = (req, res) => {
   }
 };
 
+const getAllOnGoingElection = (req, res) => {
+  try {
+    Election.find({ electionStatus: 'On-going' }).then((docs) => {
+      res.status(200).json(docs);
+    });
+  } catch (error) {
+    res.status(404).json(error);
+  }
+};
+
 module.exports = {
   createElection,
   getElectionByID,
@@ -216,4 +226,5 @@ module.exports = {
   getAllActiveElection,
   updateElection,
   extendElection,
+  getAllOnGoingElection,
 };

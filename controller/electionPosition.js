@@ -73,8 +73,28 @@ const getElectionPositionByElectionID = async (req, res) => {
   }
 };
 
+// for fetching all election positions with status on-going
+const getAllPositions = async (req, res) => {
+  try {
+    await ElectionPosition.find({})
+      .populate('electionID', 'electionStatus')
+      .then((docs) => {
+        let filteredData = [];
+        for (let i = 0; i < docs.length; i++) {
+          if (docs[i].electionID.electionStatus === 'On-going') {
+            filteredData.push(docs[i]);
+          }
+        }
+        res.status(200).json(filteredData);
+      });
+  } catch (error) {
+    res.status(404).json(error);
+  }
+};
+
 module.exports = {
   createElectionPosition,
   getElectionPosition,
   getElectionPositionByElectionID,
+  getAllPositions,
 };

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ElectionCandidate = require('../models/electionCandidate');
+// const ElectionPosition = require('../models/electionPosition');
 const fs = require('fs');
 
 const createElectionCandidate = (req, res) => {
@@ -105,9 +106,31 @@ const deleteElectionCandidate = (req, res, next) => {
     });
 };
 
+// for getting all candidates of on-going elections
+const getAllCandidate = (req, res) => {
+  try {
+    ElectionCandidate.find({})
+      .populate('userID')
+      .populate('electionID')
+      .populate('positionID')
+      .then((docs) => {
+        let filteredDocs = [];
+        for (let i = 0; i < docs.length; i++) {
+          if (docs[i].electionID.electionStatus === 'On-going') {
+            filteredDocs.push(docs[i]);
+          }
+        }
+        res.status(200).json(filteredDocs);
+      });
+  } catch (error) {
+    res.status(404).json(error);
+  }
+};
+
 module.exports = {
   createElectionCandidate,
   getElectionCandidate,
   deleteElectionCandidate,
   getElectionCandidateByELection,
+  getAllCandidate,
 };

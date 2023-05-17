@@ -44,4 +44,26 @@ const getPlatformByID = (req, res) => {
     });
 };
 
-module.exports = { createPlatform, getPlatformByID };
+const adminUpdatePlatform = async (req, res) => {
+  try {
+    console.log('platform api acess');
+    const { electionCandidateID, platform } = req.body;
+    const query = { electionCandidateID };
+    await Platform.deleteMany(query);
+    for (let i = 0; i < platform.length; i++) {
+      const newPlatform = await new Platform({
+        _id: mongoose.Types.ObjectId(),
+        electionCandidateID,
+        platform: platform[i],
+      });
+      newPlatform.save().then(() => {
+        console.log('platofrm posted');
+      });
+    }
+    res.status(201).json({ message: 'success' });
+  } catch (error) {
+    res.status(404).json(error);
+  }
+};
+
+module.exports = { createPlatform, getPlatformByID, adminUpdatePlatform };
