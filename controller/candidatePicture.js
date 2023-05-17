@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
 const cloudinary = require('../utils/cloudinary');
 const CandidatePicture = require('../models/candidatePicture');
 
@@ -83,8 +82,63 @@ const getCandidatePictureByUserID = async (req, res, next) => {
     });
 };
 
+const adminUpdateProfilePicture = async (req, res) => {
+  try {
+    console.log('use admin candidate profile update API');
+    const { userID, profilePicture } = req.body;
+
+    const result = await cloudinary.uploader.upload(profilePicture, {
+      folder: 'profilePictures',
+      width: 300,
+      crop: 'scale',
+    });
+
+    console.log('After cloudinary fetch');
+    const check = await CandidatePicture.findOne({ userID });
+    if (check) {
+      // update
+      console.log('Candidate has existing profile picture');
+      const query = { userID };
+      const update = {
+        profilePicture: {
+          public_id: result.public_id,
+          url: result.secure_url,
+        },
+      };
+      const options = { new: true };
+      await CandidatePicture.findOneAndUpdate(query, update, options).then(
+        () => {
+          console.log('profile updated');
+          res.status(202).json({ message: 'successful' });
+        }
+      );
+    } else {
+      // create
+      console.log('Candidate has no existing profile picture');
+      const candidatePicture = await new CandidatePicture({
+        _id: mongoose.Types.ObjectId(),
+        userID,
+        profilePicture: {
+          public_id: result.public_id,
+          url: result.secure_url,
+        },
+      });
+      candidatePicture.save().then((docs) => {
+        console.log('profile posted');
+        res.status(201).json({
+          success: true,
+          docs,
+        });
+      });
+    }
+  } catch (error) {
+    res.status(404).json(error);
+  }
+};
+
 module.exports = {
   postCandidatePicture,
   getCandidatePictureByUserID,
   updateCandidateProfilePicture,
+  adminUpdateProfilePicture,
 };
